@@ -1,0 +1,88 @@
+---
+# tasks file for install-bareos-client
+
+
+- name: "Add specified repository into sources list using specified filename."
+  apt_repository:
+    repo: "deb http://download.bareos.org/bareos/release/latest/xUbuntu_{{ bareos_ubuntu_install_version }}/ /\n" 
+    state: present
+    update_cache: yes
+
+- name: "Add an Apt signing key, uses whichever key is at the URL"
+  apt_key:
+    url: http://download.bareos.org/bareos/release/latest/xUbuntu_{{ bareos_ubuntu_install_version }}/Release.key 
+    state: present
+
+- name: "Update Apt package list and install Bareos client"
+  apt: name={{ item }} state=present allow_unauthenticated=yes update_cache=yes
+  with_items:
+    - bareos-filedaemon
+    - bareos-client
+    - bareos-filedaemon-python-plugin
+    - percona-xtrabackup
+
+- name: "Creating client directory"
+  file:
+    path: /etc/bareos/bareos-fd.d/client
+    state: directory
+    owner: bareos
+    group: bareos
+    mode: 0750
+    recurse: yes
+
+- name: "Creating director directory"
+  file:
+    path: /etc/bareos/bareos-fd.d/director
+    state: directory
+    owner: bareos
+    group: bareos
+    mode: 0750
+    recurse: yes
+
+- name: "Creating messages directory"
+  file:
+    path: /etc/bareos/bareos-fd.d/messages
+    state: directory
+    owner: bareos
+    group: bareos
+    mode: 0750
+    recurse: yes
+
+- name: "Push Bareos-Client configuration files"
+  template: src={{item.src}} dest={{item.dest}}  mode=0750 owner=bareos group=bareos
+  with_items:
+      - { src: '../templates/myself.conf', dest: '/etc/bareos/bareos-fd.d/client/myself.conf' }
+      - { src: '../templates/bareos-dir.conf', dest: '/etc/bareos/bareos-fd.d/director/bareos-dir.conf' }
+      - { src: '../templates/Standard.conf', dest: '/etc/bareos/bareos-fd.d/messages/Standard.conf' }
+
+- name: Copy Bareos mysql backup plugin
+  copy: src={{item}} dest=/usr/lib/bareos/plugins mode=0640 owner=bareos group=bareos
+  with_items:
+     - ../files/plugins/bareos-fd-percona.py
+     - ../files/plugins/BareosFdPercona.py
+  
+- name: Enable bareos client service
+  action: service name=bareos-fd state=started enabled=yes
+
+- name: "Check is Ubuntu Firewall installed"
+  shell: command -v ufw >/dev/null 2>&1
+  register: is_ufw_installed
+  ignore_errors: yes
+
+#- debug: msg="{{ is_ufw_installed.rc }}" 
+#- debug: var=is_ufw_installed
+
+- name: "Open port 9102 in Ubuntu Firewall to Bareos Server to make a connection"
+  ufw: 
+    rule: allow
+    port: 9102
+  when: is_ufw_installed.rc == 0
+  notify: restart-bareos-fd
+  
+- name: "Restart Bareos FD service for good measure"
+  service: name=bareos-fd state=restarted
+
+
+
+
+

@@ -1,0 +1,7 @@
+---
+# defaults file for install-bareos-client
+
+
+# Which (numerical) version of Ubuntu you are installing this onto
+bareos_ubuntu_install_version: "16.04"
+
