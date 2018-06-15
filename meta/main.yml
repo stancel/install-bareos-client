@@ -3,24 +3,12 @@ galaxy_info:
   description: Installs the Bareos Backup Client and opens the needed ports to communicate with the Bareos Director server component
   company: YourOnlineDept.com
 
-  # If the issue tracker for your role is not on github, uncomment the
-  # next line and provide a value
-  # issue_tracker_url: http://example.com/issue/tracker
 
   license: GPLv3
 
   min_ansible_version: 2.4
 
-  # If this a Container Enabled role, provide the minimum Ansible Container version.
-  # min_ansible_container_version:
-
-  # Optionally specify the branch Galaxy will use when accessing the GitHub
-  # repo for this role. During role install, if no tags are available,
-  # Galaxy will use this branch. During import Galaxy will access files on
-  # this branch. If Travis integration is configured, only notifications for this
-  # branch will be accepted. Otherwise, in all cases, the repo's default branch
-  # (usually master) will be used.
-  #github_branch:
+  github_branch: master
 
 
   platforms:
@@ -30,7 +18,6 @@ galaxy_info:
     - xenial
 
   galaxy_tags: 
-    - bareos-client
     - backups
     - bareos
     - bacula
