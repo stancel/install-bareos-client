@@ -3,5 +3,5 @@
 
 
 # Which (numerical) version of Ubuntu you are installing this onto
-bareos_ubuntu_install_version: "16.04"
+install_bareos_client_bareos_ubuntu_install_version: "16.04"
 

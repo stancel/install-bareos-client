@@ -6,7 +6,7 @@
 
 
 # The Bareos Director password for the Bareos File Daemon service being installed. This should be a very long string (47 characters is the default) and must match the applicable records 
-client_password: "Some very long string password here"
+install_bareos_client_client_password: "Some very long string password here"
 
 
 
@@ -17,4 +17,4 @@ client_password: "Some very long string password here"
 # Only change them or pass values if you would like
 
 # Which (numerical) version of Ubuntu you are installing this onto
-#bareos_ubuntu_install_version: "16.04"
+#install_bareos_client_bareos_ubuntu_install_version: "16.04"

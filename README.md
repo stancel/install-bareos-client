@@ -13,11 +13,11 @@ Role Variables
 
 The bareos client's password 
 ```
-	client_password: "Some very long string password here (47 characters)"
+	install_bareos_client_client_password: "Some very long string password here (47 characters)"
 ```
 Which (numerical) version of Ubuntu you are installing this onto (default = 16.04)
 ```
-	bareos_ubuntu_install_version: "16.04"
+	install_bareos_client_bareos_ubuntu_install_version: "16.04"
 ```
 Dependencies
 ------------
@@ -40,8 +40,8 @@ or
 
 	- hosts: your_server 
 	  vars:
-		client_password: "Some very long string password here"
-		bareos_ubuntu_install_version: "16.04"
+		install_bareos_client_client_password: "Some very long string password here"
+		install_bareos_client_bareos_ubuntu_install_version: "16.04"
 	  roles:
 	    - { role: stancel.install-bareos-client }
 
@@ -53,4 +53,5 @@ GPLv3
 Author Information
 ------------------
 
-Brad Stancel
+[Brad Stancel](https://github.com/stancel)
+
