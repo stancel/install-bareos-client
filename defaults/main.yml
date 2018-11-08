@@ -4,4 +4,6 @@
 
 # Which (numerical) version of Ubuntu you are installing this onto
 install_bareos_client_bareos_ubuntu_install_version: "16.04"
-
+# if installing onto Ubuntu 18.04, then make sure to keep the "16.04" as the value for install_bareos_client_bareos_ubuntu_install_version
+# this uses a temporary workaround found here https://schroeffu.ch/2018/05/workaround-bareos-backup-server-client-unter-ubuntu-18-04/
+# until an official Bareos client is released for Ubuntu 18.04

@@ -2,6 +2,42 @@
 # tasks file for install-bareos-client
 
 
+# Credit to the author of this post: https://schroeffu.ch/2018/05/workaround-bareos-backup-server-client-unter-ubuntu-18-04/
+- name: "Bareos client currently does not have a release for version so performing temporary workaround"
+  block:
+
+    - name: "Install the equivs binary so we can run equivs-build in a following step"
+      apt: 
+        name: "{{ item }}" 
+        state: present 
+        allow_unauthenticated: yes 
+        update_cache: yes
+      with_items:
+        - equivs   
+
+    - name: "Copying over the libreadline6 build file"
+      become: true
+      template:
+        src: 'libreadline.j2'
+        dest: "/tmp/libreadline"
+        mode: 0644
+
+    - name: "Generate the .deb fake package that creates libreadline6 and symlinks to libreadline7"
+      become: true
+      shell: equivs-build libreadline6
+      args:
+        chdir: /tmp/
+      register: libreadline6_result
+
+    - name: "Install the .deb fake package that creates libreadline6 and symlinks to libreadline7"
+      become: true
+      shell: sudo dpkg -i libreadline6_6.0_all.deb
+      args:
+        chdir: /tmp/
+      register: dpkg_install_result
+
+  when: (ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'bionic')
+
 - name: "Add specified repository into sources list using specified filename."
   apt_repository:
     repo: "deb http://download.bareos.org/bareos/release/latest/xUbuntu_{{ install_bareos_client_bareos_ubuntu_install_version }}/ /\n" 
