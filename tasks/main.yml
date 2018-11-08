@@ -37,13 +37,13 @@
         chdir: /tmp/
       register: dpkg_install_result
 
-    - name: "Add an Apt signing key, uses whichever key is at the URL"
-      become: true
-      apt_key:
-        url: http://download.bareos.org/bareos/release/latest/xUbuntu_{{ install_bareos_client_bareos_ubuntu_install_version }}/Release.key 
-        state: present
-
   when: (ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'bionic')
+
+- name: "Add an Apt signing key, uses whichever key is at the URL"
+  become: true
+  apt_key:
+    url: http://download.bareos.org/bareos/release/latest/xUbuntu_{{ install_bareos_client_bareos_ubuntu_install_version }}/Release.key 
+    state: present
 
 - name: "Add specified repository into sources list using specified filename."
   become: true
@@ -51,13 +51,6 @@
     repo: "deb http://download.bareos.org/bareos/release/latest/xUbuntu_{{ install_bareos_client_bareos_ubuntu_install_version }}/ /\n" 
     state: present
     update_cache: yes
-    validate_certs: no
-
-- name: "Add an Apt signing key, uses whichever key is at the URL"
-  become: true
-  apt_key:
-    url: http://download.bareos.org/bareos/release/latest/xUbuntu_{{ install_bareos_client_bareos_ubuntu_install_version }}/Release.key 
-    state: present
 
 - name: "Update Apt package list and install Bareos client"
   apt: name={{ item }} state=present allow_unauthenticated=yes update_cache=yes
