@@ -3,13 +3,11 @@ galaxy_info:
   description: Installs the Bareos Backup Client and opens the needed ports to communicate with the Bareos Director server component
   company: YourOnlineDept.com
 
-
   license: GPLv3
 
   min_ansible_version: 2.4
 
   github_branch: master
-
 
   platforms:
   - name: Ubuntu
@@ -21,6 +19,5 @@ galaxy_info:
     - backups
     - bareos
     - bacula
-
 
 dependencies: []

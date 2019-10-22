@@ -1,44 +1,6 @@
 ---
 # tasks file for install-bareos-client
 
-
-# Credit to the author of this post: https://schroeffu.ch/2018/05/workaround-bareos-backup-server-client-unter-ubuntu-18-04/
-- name: "Bareos client currently does not have a release for version so performing temporary workaround"
-  block:
-
-    - name: "Install the equivs binary so we can run equivs-build in a following step"
-      become: true
-      apt: 
-        name: "{{ item }}" 
-        state: present 
-        allow_unauthenticated: yes 
-        update_cache: yes
-      with_items:
-        - equivs   
-
-    - name: "Copying over the libreadline6 build file"
-      become: true
-      template:
-        src: 'libreadline6.j2'
-        dest: "/tmp/libreadline6"
-        mode: 0644
-
-    - name: "Generate the .deb fake package that creates libreadline6 and symlinks to libreadline7"
-      become: true
-      shell: equivs-build libreadline6
-      args:
-        chdir: /tmp/
-      register: libreadline6_result
-
-    - name: "Install the .deb fake package that creates libreadline6 and symlinks to libreadline7"
-      become: true
-      shell: dpkg -i libreadline6_6.0_all.deb
-      args:
-        chdir: /tmp/
-      register: dpkg_install_result
-
-  when: (ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'bionic')
-
 - name: "Add an Apt signing key, uses whichever key is at the URL"
   become: true
   apt_key:
@@ -53,7 +15,11 @@
     update_cache: yes
 
 - name: "Update Apt package list and install Bareos client"
-  apt: name={{ item }} state=present allow_unauthenticated=yes update_cache=yes
+  apt: 
+    name: "{{ item }}"
+    state: present 
+    allow_unauthenticated: yes 
+    update_cache: yes
   with_items:
     - bareos-filedaemon
     - bareos-client
@@ -88,20 +54,33 @@
     recurse: yes
 
 - name: "Push Bareos-Client configuration files"
-  template: src={{item.src}} dest={{item.dest}}  mode=0750 owner=bareos group=bareos
+  template: 
+    src: "{{ item.src }}" 
+    dest: "{{ item.dest }}" 
+    mode: 0750 
+    owner: bareos
+    group: bareos
   with_items:
       - { src: '../templates/myself.conf', dest: '/etc/bareos/bareos-fd.d/client/myself.conf' }
       - { src: '../templates/bareos-dir.conf', dest: '/etc/bareos/bareos-fd.d/director/bareos-dir.conf' }
       - { src: '../templates/Standard.conf', dest: '/etc/bareos/bareos-fd.d/messages/Standard.conf' }
 
 - name: Copy Bareos mysql backup plugin
-  copy: src={{item}} dest=/usr/lib/bareos/plugins mode=0640 owner=bareos group=bareos
+  copy: 
+    src: "{{ item }}" 
+    dest: /usr/lib/bareos/plugins 
+    mode: 0640 
+    owner: bareos
+    group: bareos
   with_items:
      - ../files/plugins/bareos-fd-percona.py
      - ../files/plugins/BareosFdPercona.py
   
 - name: Enable bareos client service
-  action: service name=bareos-fd state=started enabled=yes
+  service: 
+    name: bareos-fd 
+    state: started 
+    enabled: yes
 
 - name: "Check is Ubuntu Firewall installed"
   shell: command -v ufw >/dev/null 2>&1
@@ -119,9 +98,6 @@
   notify: restart-bareos-fd
   
 - name: "Restart Bareos FD service for good measure"
-  service: name=bareos-fd state=restarted
-
-
-
-
-
+  service: 
+    name: bareos-fd 
+    state: restarted

@@ -2,6 +2,6 @@
 # handlers file for install-bareos-client
 
 - name: restart-bareos-fd
-  service: name=bareos-fd state=restarted
-
-
+  service: 
+    name: bareos-fd 
+    state: restarted
