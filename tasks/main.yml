@@ -15,16 +15,15 @@
     update_cache: yes
 
 - name: "Update Apt package list and install Bareos client"
-  apt: 
-    name: "{{ item }}"
-    state: present 
+  apt:
+    state: present
     allow_unauthenticated: yes 
     update_cache: yes
-  with_items:
-    - bareos-filedaemon
-    - bareos-client
-    - bareos-filedaemon-python-plugin
-    - percona-xtrabackup
+    pkg:
+      - bareos-filedaemon
+      - bareos-client
+      - bareos-filedaemon-python-plugin
+      - percona-xtrabackup
 
 - name: "Creating client directory"
   file:
