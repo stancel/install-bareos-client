@@ -4,13 +4,13 @@
 - name: "Add an Apt signing key, uses whichever key is at the URL"
   become: true
   apt_key:
-    url: http://download.bareos.org/bareos/release/latest/xUbuntu_{{ install_bareos_client_bareos_ubuntu_install_version }}/Release.key 
+    url: http://download.bareos.org/bareos/release/20/xUbuntu_{{ install_bareos_client_bareos_ubuntu_install_version }}/Release.key 
     state: present
 
 - name: "Add specified repository into sources list using specified filename."
   become: true
   apt_repository:
-    repo: "deb http://download.bareos.org/bareos/release/latest/xUbuntu_{{ install_bareos_client_bareos_ubuntu_install_version }}/ /\n" 
+    repo: "deb http://download.bareos.org/bareos/release/20/xUbuntu_{{ install_bareos_client_bareos_ubuntu_install_version }}/ /\n" 
     state: present
     update_cache: yes
 
@@ -22,7 +22,7 @@
     pkg:
       - bareos-filedaemon
       - bareos-client
-      - bareos-filedaemon-python-plugin
+      - bareos-filedaemon-python3-plugin
       - percona-xtrabackup
 
 - name: "Creating client directory"
