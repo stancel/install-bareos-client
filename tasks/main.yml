@@ -23,7 +23,6 @@
       - bareos-filedaemon
       - bareos-client
       - bareos-filedaemon-python3-plugin
-      - percona-xtrabackup
 
 - name: "Creating client directory"
   file:
